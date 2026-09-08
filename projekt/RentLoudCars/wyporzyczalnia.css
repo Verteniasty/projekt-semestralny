@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+}
+
+body h1 {
+    text-align: center;
+}
+
+#menu ul {
+   
+  list-style-type: none;
+  text-align: center;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+#menu {
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    background-color: grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+li {
+    padding: 15px;
+}
