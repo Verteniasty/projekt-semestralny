@@ -1,0 +1,36 @@
+:root {
+    --bg: #F5F3EF;
+    --dark: #1C1F26;
+    --accent: #E8622C;
+    --accent-dark: #C74E1F;
+    --text: #1C1F26;
+    --muted: #6B6F76;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.4;
+}
+
+header, nav, main, section, footer, form {
+    display: block;
+}
+
+.image {
+    width: 350px;
+    height: 250px;
+}
+
+.label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}

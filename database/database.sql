@@ -80,3 +80,8 @@ CREATE TABLE rezerwacje (
     FOREIGN KEY (id_pracownika) REFERENCES pracownicy(id) ON DELETE CASCADE,
     FOREIGN KEY (id_uslugi) REFERENCES uslugi(id) ON DELETE CASCADE
 );
+
+-- e1dddc844ca8ad19718295dbf2f0ed6746b459c2e3582ef8bf909812a24d9fe7 = test123!
+
+INSERT INTO uzytkownicy (imie, nazwisko, email, haslo, numer_telefonu, rola)
+VALUES ("Tomasz", "Kuzicki", "Tomasz.Kuzicki@gmail.com", "e1dddc844ca8ad19718295dbf2f0ed6746b459c2e3582ef8bf909812a24d9fe7", "+48203591342", "użytkownik")
