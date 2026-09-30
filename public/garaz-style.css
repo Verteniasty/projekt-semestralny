@@ -1,0 +1,72 @@
+.garage-hero {
+  position: relative;
+  background: var(--ink);
+  color: #fff;
+  border-bottom: 8px solid var(--red);
+  overflow: hidden;
+}
+.garage-hero img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+.garage-hero .wrap {
+  position: relative;
+  padding-top: 96px;
+  padding-bottom: 64px;
+}
+.garage-hero h1 {
+  margin-bottom: 12px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.chip {
+  background: var(--card);
+  border: 2px solid var(--line);
+  padding: 8px 18px;
+  font: 700 0.95rem var(--body);
+  cursor: pointer;
+  color: var(--ink);
+}
+.chip:hover {
+  border-color: var(--ink);
+}
+.chip.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+.sort {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+.sort select {
+  width: auto;
+  padding: 8px;
+}
+.card[hidden] {
+  display: none;
+}
+.empty {
+  color: var(--muted);
+  margin-top: 24px;
+}
+@media (max-width: 720px) {
+  .sort {
+    margin-left: 0;
+    width: 100%;
+  }
+}

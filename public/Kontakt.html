@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt – RentLoudCars</title>
+    <meta name="description" content="Skontaktuj się z RentLoudCars: telefon, e-mail, adres i formularz kontaktowy.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <a class="skip" href="#main">Przejdź do treści</a>
+
+    <header class="site-header">
+        <div class="wrap bar">
+            <a class="logo" href="Strona-glowna.html">Rent<span>Loud</span>Cars</a>
+            <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button>
+            <nav id="menu" aria-label="Główna nawigacja">
+                <ul>
+                    <li><a href="Strona-glowna.html">Strona główna</a></li>
+                    <li><a href="Garaz.html">Garaż</a></li>
+                    <li><a href="O-nas.html">O nas</a></li>
+                    <li><a href="Kontakt.html" aria-current="page">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
+
+        <section class="page-hero">
+            <div class="wrap">
+                <h1>Kontakt</h1>
+                <p class="lead">Pytania o auta, terminy lub cenę? Odpowiadamy w ciągu godziny w dni robocze.</p>
+            </div>
+        </section>
+
+        <section class="block">
+            <div class="wrap two-col">
+                <div>
+                    <h2>Dane kontaktowe</h2>
+                    <address>
+                        <p><strong>Telefon</strong><br><a href="tel:+48000000000">+48 000 000 000</a></p>
+                        <p><strong>E-mail</strong><br><a href="mailto:kontakt@rentloudcars.pl">kontakt@rentloudcars.pl</a></p>
+                        <p><strong>Adres</strong><br>ul. Przykładowa 1, 00-000 Warszawa</p>
+                    </address>
+                    <h3>Godziny otwarcia</h3>
+                    <p>Pon–Pt: 8:00–19:00<br>Sob: 9:00–15:00<br>Niedz.: po wcześniejszym umówieniu</p>
+                </div>
+
+                <form id="contact" novalidate>
+                    <div class="row">
+                        <label for="c-name">Imię i nazwisko</label>
+                        <input type="text" id="c-name" name="name" autocomplete="name" required>
+                        <p class="err" data-for="name"></p>
+                    </div>
+                    <div class="row">
+                        <label for="c-email">E-mail</label>
+                        <input type="email" id="c-email" name="email" autocomplete="email" required>
+                        <p class="err" data-for="email"></p>
+                    </div>
+                    <div class="row">
+                        <label for="c-msg">Wiadomość</label>
+                        <textarea id="c-msg" name="message" rows="5" required></textarea>
+                        <p class="err" data-for="message"></p>
+                    </div>
+                    <button type="submit" class="btn">Wyślij wiadomość</button>
+                    <p class="ok" id="contact-ok" hidden></p>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrap foot">
+            <p><strong>RentLoudCars</strong><br>Wypożyczalnia aut z charakterem.</p>
+            <ul>
+                <li><a href="Garaz.html">Garaż</a></li>
+                <li><a href="O-nas.html">O nas</a></li>
+                <li><a href="Kontakt.html">Kontakt</a></li>
+            </ul>
+            <p class="small">© 2026 RentLoudCars. Treści i zdjęcia są chronione, nie kopiuj strony.</p>
+        </div>
+    </footer>
+
+    <script src="index.js"></script>
+</body>
+</html>
