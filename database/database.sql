@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS Wypozyczalnia
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
-USE Wypozyczalnia
+USE Wypozyczalnia;
 
 CREATE TABLE uzytkownicy (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -13,8 +13,10 @@ CREATE TABLE uzytkownicy (
     email VARCHAR(60) UNIQUE NOT NULL,
     haslo VARCHAR(255) NOT NULL,
     numer_telefonu VARCHAR(30) NOT NULL,
-    rola VARCHAR(50) NOT NULL,
+    rola ENUM('klient', 'pracownik', 'administrator') NOT NULL DEFAULT 'klient',
     aktywne BOOLEAN NOT NULL DEFAULT TRUE,
+    nieudane_proby TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    zablokowany_do DATETIME NULL,
     stworzony TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -83,13 +85,15 @@ CREATE TABLE rezerwacje (
 
 CREATE INDEX idx_rezerwacje_data ON rezerwacje(data_rezerwacji);
 
--- e1dddc844ca8ad19718295dbf2f0ed6746b459c2e3582ef8bf909812a24d9fe7 = test123!
+-- Hasło wszystkich kont testowych: test123!
+-- W bazie jest hash bcrypt (password_hash w PHP), każde konto ma własny "salt".
 
 INSERT INTO uzytkownicy (imie, nazwisko, email, haslo, numer_telefonu, rola) VALUES
-("Tomasz", "Kuzicki", "Tomasz.Kuzicki@gmail.com", "e1dddc844ca8ad19718295dbf2f0ed6746b459c2e3582ef8bf909812a24d9fe7", "+48203591342", "użytkownik"),
-("Anna", "Nowak", "Anna.Nowak@gmail.com", "e1dddc844ca8ad19718295dbf2f0ed6746b459c2e3582ef8bf909812a24d9fe7", "+48493582532", "pracownik"),
-("Kamil", "Woźnica", "Kamil.Woznica@gmail.com", "e1dddc844ca8ad19718295dbf2f0ed6746b459c2e3582ef8bf909812a24d9fe7", "+48624593201", "pracownik"),
-("Karolina", "Celin", "Karolina.Celin@gmail.com", "e1dddc844ca8ad19718295dbf2f0ed6746b459c2e3582ef8bf909812a24d9fe7", "+48734593428", "użytkownik");
+("Tomasz", "Kuzicki", "Tomasz.Kuzicki@gmail.com", "$2y$10$wfduwn8Crbvgfvc0aSUqcez7Zsl9dKWm5A6THnLoLA38fUUqhrzby", "+48203591342", "klient"),
+("Anna", "Nowak", "Anna.Nowak@gmail.com", "$2y$10$owSanR8r35KITWdrmYCwV.pTUyl2xl1FU4AoTCCia7RQWa.JYudGG", "+48493582532", "pracownik"),
+("Kamil", "Woźnica", "Kamil.Woznica@gmail.com", "$2y$10$HT1Fw.mh8sNPA9CE.3i/oOZyEgvthwRQ1mT0c3szsmBtD6VOM0cIK", "+48624593201", "pracownik"),
+("Karolina", "Celin", "Karolina.Celin@gmail.com", "$2y$10$0dP7t8aIdT8uZHxW.n0QWeX2JnvPlboPja7WyWYKj/7/M.Xsib/q6", "+48734593428", "klient"),
+("Adam", "Administrator", "admin@rentloudcars.pl", "$2y$10$VYFR0k5NKW2XsmgOYlb.HOYMcuKRx8hhjzvsjozYH09OwLTYulJxO", "+48500100200", "administrator");
 
 INSERT INTO kategorie_uslug (nazwa, opis) VALUES
 ("Samochody Osobowe", "Ekonomiczne i komfortowe auta miejskie oraz kompaktowe."),

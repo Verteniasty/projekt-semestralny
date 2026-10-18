@@ -1,33 +1,7 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O nas – RentLoudCars</title>
-    <meta name="description" content="Poznaj RentLoudCars: wypożyczalnię aut dla ludzi, którzy lubią słyszeć silnik.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <a class="skip" href="#main">Przejdź do treści</a>
-
-    <header class="site-header">
-        <div class="wrap bar">
-            <a class="logo" href="Strona-glowna.html">Rent<span>Loud</span>Cars</a>
-            <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button>
-            <nav id="menu" aria-label="Główna nawigacja">
-                <ul>
-                    <li><a href="Strona-glowna.html">Strona główna</a></li>
-                    <li><a href="Garaz.html">Garaż</a></li>
-                    <li><a href="O-nas.html" aria-current="page">O nas</a></li>
-                    <li><a href="Kontakt.html">Kontakt</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
+<?php
+require __DIR__ . '/../src/bootstrap.php';
+render_naglowek('O nas – RentLoudCars', 'onas', [], 'Poznaj RentLoudCars: wypożyczalnię aut dla ludzi, którzy lubią słyszeć silnik.');
+?>
     <main id="main">
 
         <section class="page-hero">
@@ -73,19 +47,4 @@
         </section>
 
     </main>
-
-    <footer class="site-footer">
-        <div class="wrap foot">
-            <p><strong>RentLoudCars</strong><br>Wypożyczalnia aut z charakterem.</p>
-            <ul>
-                <li><a href="Garaz.html">Garaż</a></li>
-                <li><a href="O-nas.html">O nas</a></li>
-                <li><a href="Kontakt.html">Kontakt</a></li>
-            </ul>
-            <p class="small">© 2026 RentLoudCars. Treści i zdjęcia są chronione, nie kopiuj strony.</p>
-        </div>
-    </footer>
-
-    <script src="index.js"></script>
-</body>
-</html>
+<?php render_stopka(); ?>

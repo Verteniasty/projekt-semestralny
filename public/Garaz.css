@@ -1,0 +1,163 @@
+/* ===== Garaż ===== */
+.garage-hero {
+  position: relative;
+  background: var(--ink);
+  color: #fff;
+  border-bottom: 8px solid var(--red);
+  overflow: hidden;
+}
+.garage-hero img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+.garage-hero .wrap {
+  position: relative;
+  padding-top: 96px;
+  padding-bottom: 64px;
+}
+.garage-hero h1 { margin-bottom: 12px; }
+
+/* Filtry */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.chip {
+  background: var(--card);
+  border: 2px solid var(--line);
+  padding: 8px 18px;
+  font: 700 0.95rem var(--body);
+  cursor: pointer;
+  color: var(--ink);
+}
+.chip:hover { border-color: var(--ink); }
+.chip.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+.sort {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+.sort select { width: auto; padding: 8px; }
+
+.suwak { max-width: 480px; margin-bottom: 8px; }
+.suwak label { margin-bottom: 4px; }
+.suwak input[type="range"] {
+  padding: 0;
+  border: 0;
+  background: none;
+  accent-color: var(--red);
+  cursor: pointer;
+}
+.licznik { color: var(--muted); margin: 0 0 24px; }
+.empty { color: var(--muted); margin-top: 24px; }
+
+/* Karty aut */
+.card[hidden] { display: none; }
+.auto { cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+.auto:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14); }
+.auto.tuned { border-top-color: var(--ink); }
+.thumb { position: relative; overflow: hidden; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.plakietka {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--ink);
+  color: #fff;
+  padding: 3px 10px;
+  font: 700 0.75rem var(--body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.auto.tuned .plakietka { background: var(--red); }
+/* Krótki opis pokazuje się po najechaniu (lub po wejściu klawiaturą) */
+.skrot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 28px 14px 12px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.88));
+  color: #fff;
+  font: 500 0.9rem/1.35 var(--body);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.auto:hover .skrot,
+.auto:focus-within .skrot { opacity: 1; transform: none; }
+h3 .auto-open {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.meta { color: var(--muted); font-size: 0.95rem; margin-top: 0; margin-bottom: 6px; }
+.auto-foot { display: flex; gap: 10px; margin: 0 20px; }
+.auto-foot .btn { margin: 0; }
+.btn.alt { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn.alt:hover { background: var(--ink); color: #fff; }
+
+/* Okno szczegółów */
+dialog {
+  border: 0;
+  padding: 0;
+  width: calc(100% - 32px);
+  max-width: 680px;
+  max-height: calc(100% - 32px);
+  overflow: auto;
+  background: var(--card);
+  color: var(--ink);
+}
+dialog::backdrop { background: rgba(10, 12, 16, 0.72); }
+.m-media {
+  height: 240px;
+  background: repeating-linear-gradient(135deg, #d5d9df 0 12px, #e4e7ec 12px 24px);
+  display: grid;
+  place-items: center;
+  font-family: var(--head);
+  font-size: 1.8rem;
+  color: var(--muted);
+}
+.m-media img { width: 100%; height: 100%; object-fit: cover; }
+.m-body { position: relative; padding: 24px 28px 28px; }
+.m-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: 0;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--ink);
+}
+.m-kat { color: var(--red-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 4px; }
+.m-spec {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 20px;
+  margin: 16px 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.m-spec dt { color: var(--muted); }
+.m-spec dd { margin: 0; font-weight: 700; }
+
+@media (max-width: 720px) {
+  .sort { margin-left: 0; width: 100%; }
+}
