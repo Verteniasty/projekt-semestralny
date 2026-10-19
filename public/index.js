@@ -78,37 +78,6 @@ if (form) {
   });
 }
 
-const garage = document.getElementById('garage');
-if (garage) {
-  const cards = [...garage.querySelectorAll('.card')];
-  const chips = document.querySelectorAll('.chip');
-  const sortSel = document.getElementById('sort');
-  const empty = document.getElementById('empty');
-  let filter = 'all';
-
-  const render = () => {
-    const dir = sortSel.value === 'asc' ? 1 : -1;
-    cards.sort((a, b) => (a.dataset.price - b.dataset.price) * dir)
-         .forEach(c => garage.appendChild(c));
-    let shown = 0;
-    cards.forEach(c => {
-      const show = filter === 'all' || c.dataset.type === filter;
-      c.hidden = !show;
-      if (show) shown++;
-    });
-    empty.hidden = shown > 0;
-  };
-
-  chips.forEach(chip => chip.addEventListener('click', () => {
-    chips.forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    filter = chip.dataset.filter;
-    render();
-  }));
-  sortSel.addEventListener('change', render);
-  render();
-}
-
 const contact = document.getElementById('contact');
 if (contact) {
   const ok = document.getElementById('contact-ok');
