@@ -82,9 +82,8 @@ CREATE TABLE rezerwacje (
     id_uzytkownika INT NOT NULL,
     id_pracownika INT NOT NULL,
     id_uslugi INT NOT NULL,
-    data_rezerwacji DATE NOT NULL,
-    godzina_rozpoczecia TIME NOT NULL,
-    godzina_zakonczenia TIME NOT NULL,
+    od_data_rezerwacji DATE NOT NULL,
+    do_data_rezerwacji DATE NOT NULL,
     status ENUM("oczekujace", "potwierdzone", "anulowane", "zakonczone") NOT NULL DEFAULT 'oczekujace',
     komentarz VARCHAR(512) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -94,7 +93,7 @@ CREATE TABLE rezerwacje (
     FOREIGN KEY (id_uslugi) REFERENCES uslugi(id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_rezerwacje_data ON rezerwacje(data_rezerwacji);
+CREATE INDEX idx_rezerwacje_data ON rezerwacje(od_data_rezerwacji);
 
 -- Hasło wszystkich kont testowych: test123!
 -- W bazie jest hash bcrypt (password_hash w PHP), każde konto ma własny "salt".
@@ -133,6 +132,6 @@ INSERT INTO godziny_pracy_pracownikow (id_pracownika, dzien_tygodnia, data, godz
 (2, 5, NULL, "09:00:00", "17:00:00"),
 (2, 6, NULL, "09:00:00", "14:00:00");
 
-INSERT INTO rezerwacje (id_uzytkownika, id_pracownika, id_uslugi, data_rezerwacji, godzina_rozpoczecia, godzina_zakonczenia, status, komentarz) VALUES
-(1, 1, 1, "2026-06-10", "10:00:00", "10:00:00", "potwierdzone", "Proszę o przygotowanie fotelika dziecięcego."),
-(4, 2, 4, "2026-06-15", "14:00:00", "14:00:00", "oczekujace", "Wynajem na weekend ślubny.");
+INSERT INTO rezerwacje (id_uzytkownika, id_pracownika, id_uslugi, od_data_rezerwacji, do_data_rezerwacji, status, komentarz) VALUES
+(1, 1, 1, "2026-06-10 14:00:00", "2026-06-12 14:00:00", "potwierdzone", "Proszę o przygotowanie fotelika dziecięcego."),
+(4, 2, 4, "2026-06-15 10:00:00", "2026-06-16 10:00:00", "oczekujace", "Wynajem na weekend ślubny.");

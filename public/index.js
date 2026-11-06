@@ -71,6 +71,20 @@ if (form) {
 
     if (!valid) return;
 
+    fetch("rezerwacja.php", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({car: form.car.value, from: form.from.value, to: form.to.value, name: form.elements['name'].value, email: form.email.value, csrf: form.csrf.value})
+    }).then(response => {
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
+      return response.json()
+    })
+
     okEl.textContent = `Dziękujemy, ${form.elements['name'].value.trim()}! Rezerwacja wysłana. Potwierdzenie przyjdzie na ${form.email.value.trim()}.`;
     okEl.hidden = false;
     form.reset();

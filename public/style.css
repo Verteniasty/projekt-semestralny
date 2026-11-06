@@ -340,7 +340,7 @@ select:focus {
 .small {
   grid-column: 1/-1;
   font-size: 0.9rem;
-  color: #8b929e;
+  /* color: #8b929e; */
   margin: 0;
 }
 

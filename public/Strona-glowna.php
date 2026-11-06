@@ -77,6 +77,7 @@ render_naglowek('RentLoudCars – wypożyczalnia głośnych aut', 'glowna', [], 
             <div class="wrap narrow">
                 <h2>Zarezerwuj auto</h2>
                 <form id="booking" novalidate>
+                    <?= csrf_pole() ?>
                     <div class="row">
                         <label for="car">Auto</label>
                         <select id="car" name="car" required>
