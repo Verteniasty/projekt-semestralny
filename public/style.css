@@ -219,8 +219,13 @@ nav a[aria-current="page"] {
   color: var(--muted);
   margin-bottom: 20px;
 }
+.thumb img {
+  width: 100%;
+  height: 175px;
+  object-fit: cover;
+}
 .card h3 {
-  margin-top: 0;
+  margin-top: 15px;
 }
 .price {
   color: var(--muted);
@@ -337,7 +342,7 @@ select:focus {
   color: #fff;
   text-decoration: underline;
 }
-.small {
+.site-footer .small {
   grid-column: 1/-1;
   font-size: 0.9rem;
   color: #8b929e;
@@ -438,6 +443,7 @@ textarea:focus {
   }
 }
 
+/* ===== Etap 2: konta, logowanie, panele ===== */
 nav form { background: none; padding: 0; display: inline; }
 .btn-link {
   background: none;
@@ -475,3 +481,116 @@ nav form { background: none; padding: 0; display: inline; }
 
 .btn.alt { background: transparent; color: var(--ink); border: 2px solid var(--ink); }
 .btn.alt:hover { background: var(--ink); color: #fff; }
+
+/* ===== Etap 3 i 4: panel administratora, tabele, rezerwacje ===== */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.muted { color: var(--muted); font-size: 0.92rem; }
+input[type="checkbox"], input[type="radio"] { width: auto; padding: 0; }
+.row-check label { font-weight: 500; display: flex; gap: 8px; align-items: center; }
+.odstep-maly { margin-top: 28px; }
+select.mala { width: auto; padding: 6px 8px; }
+form.inline { display: inline; background: none; padding: 0; }
+
+.admin-nav { background: var(--ink); border-top: 1px solid #333843; }
+.admin-nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 22px; margin: 0; padding: 0; }
+.admin-nav a { display: block; padding: 14px 0; color: #d6dae1; text-decoration: none; border-bottom: 3px solid transparent; font-weight: 700; }
+.admin-nav a:hover { color: #fff; }
+.admin-nav a[aria-current="page"] { color: #fff; border-color: var(--red); }
+.admin-tresc { padding-top: 40px; }
+
+.dwie-kolumny { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 32px; align-items: start; }
+.karta-formularz { background: var(--card); padding: 22px; border-top: 4px solid var(--red); }
+.karta-formularz .btn { margin-right: 8px; margin-top: 6px; }
+.filtry { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 14px; margin-bottom: 14px; }
+.filtry .row { margin-bottom: 12px; min-width: 150px; flex: 1 1 150px; }
+.filtry .btn { margin-bottom: 12px; }
+.lista-checkbox { border: 2px solid var(--line); padding: 10px 14px; margin: 0 0 18px; }
+.lista-checkbox legend { font-weight: 700; padding: 0 6px; }
+.lista-checkbox label { font-weight: 500; display: flex; gap: 8px; align-items: center; margin: 4px 0; }
+fieldset.dzien, div.dzien { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; border: 0; border-bottom: 1px solid var(--line); padding: 8px 0; margin: 0; }
+fieldset.dzien legend { float: left; width: 120px; font-weight: 700; padding: 0; }
+.dzien input[type="time"] { width: 112px; padding: 6px 8px; }
+
+.tabela-wrap { overflow-x: auto; background: var(--card); }
+.tabela { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.tabela th, .tabela td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+.tabela thead th { background: var(--ink); color: #fff; font-weight: 700; white-space: nowrap; }
+.tabela tbody tr:nth-child(even) { background: #f6f7f9; }
+.tabela td.akcje { min-width: 190px; }
+.tabela td.akcje form.inline { display: inline; }
+.tabela td.akcje .btn { margin: 2px 2px 2px 0; padding: 6px 12px; }
+.akcje .btn.small { padding: 7px 14px; }
+.status { display: inline-block; padding: 2px 10px; font-size: 0.85rem; font-weight: 700; border: 1px solid; }
+.status-oczekujace { background: #fff4d6; border-color: #c59a00; color: #6b5200; }
+.status-potwierdzone { background: #e3f4e6; border-color: #2a8a3e; color: #1c5a29; }
+.status-anulowane { background: #f1f1f1; border-color: #8b929e; color: #4a505a; }
+.status-zakonczone { background: #e1ebf8; border-color: #2c63ad; color: #1d4378; }
+
+.paginacja ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 18px 0 0; }
+.paginacja a { display: block; padding: 7px 13px; background: var(--card); border: 2px solid var(--line); text-decoration: none; font-weight: 700; }
+.paginacja a:hover { border-color: var(--ink); }
+.paginacja a[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.akcje-potwierdzenia .btn { margin-right: 10px; }
+
+.szczegoly { display: grid; grid-template-columns: max-content 1fr; gap: 8px 18px; margin: 0 0 18px; }
+.szczegoly dt { color: var(--muted); }
+.szczegoly dd { margin: 0; }
+
+.wykres { width: 100%; height: auto; max-width: 520px; }
+.wykres-etykieta, .wykres-wartosc { font: 500 13px var(--body); fill: var(--ink); }
+.wykres-slupek { fill: var(--red); }
+
+.zakladki { list-style: none; display: flex; gap: 8px; padding: 0; margin: 0 0 16px; flex-wrap: wrap; }
+.zakladki a { display: block; padding: 8px 18px; border: 2px solid var(--line); background: var(--card); text-decoration: none; font-weight: 700; }
+.zakladki a[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+.sloty { border: 0; padding: 0; margin: 0 0 16px; }
+.sloty legend { font-weight: 700; margin-bottom: 8px; padding: 0; }
+.sloty { display: flex; flex-wrap: wrap; gap: 8px; }
+.sloty legend, .sloty p { flex-basis: 100%; }
+.slot { position: relative; margin: 0; }
+.slot input { position: absolute; opacity: 0; }
+.slot span { display: block; padding: 8px 14px; border: 2px solid var(--line); background: #fff; font-weight: 700; cursor: pointer; }
+.slot input:checked + span { background: var(--ink); border-color: var(--ink); color: #fff; }
+.slot input:focus-visible + span { outline: 3px solid var(--red); outline-offset: 2px; }
+.oferta-karta .meta { color: var(--muted); font-size: 0.95rem; }
+.tabela td.termin { white-space: nowrap; }
+
+/* ===== Etap 4+: ulepszony panel admina, kalendarz floty, wynajem na doby ===== */
+.thumb.brak { background: linear-gradient(135deg, #1a1d24 0%, #2b303a 60%, #3a1614 100%); display: grid; place-items: center; padding: 16px; text-align: center; }
+.nazwa-auta { font-family: var(--head); font-size: 1.5rem; line-height: 1.15; color: #fff; text-transform: uppercase; letter-spacing: 0.03em; }
+.moc { color: var(--red-dark); font-weight: 700; }
+
+.admin-hero { padding-top: 28px; padding-bottom: 24px; }
+.admin-hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+.stat small { font-size: 1.2rem; color: var(--muted); }
+.stat span { display: block; color: var(--muted); font-size: 0.95rem; }
+.stat-uwaga { border-top-color: #c59a00; background: #fffaf0; }
+.kpi { grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+
+.plakietka-typ { display: inline-block; padding: 2px 8px; border: 1px solid var(--line); background: #fff; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.plakietka-wydanie { border-color: #2a8a3e; color: #1c5a29; background: #e3f4e6; }
+.plakietka-zwrot { border-color: #2c63ad; color: #1d4378; background: #e1ebf8; }
+.plakietka-wizyta { border-color: #8b929e; color: #4a505a; }
+.licznik { display: inline-block; min-width: 22px; margin-left: 6px; padding: 0 6px; border-radius: 11px; background: var(--alt); color: var(--ink); font-size: 0.8rem; text-align: center; }
+.licznik-uwaga { background: var(--red); color: #fff; }
+
+.kal-pasek-nawig { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+.kal-tytul { font-family: var(--head); font-size: 1.6rem; font-weight: 400; min-width: 190px; text-align: center; }
+.kal-pasek-nawig form { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.kal-legenda { list-style: none; display: flex; gap: 18px; padding: 0; margin: 0 0 12px; font-size: 0.9rem; }
+.kal-probka { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; }
+.kal-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--line); }
+.kalendarz { display: block; max-width: none; }
+.kal-dzien { font-size: 12px; font-weight: 700; fill: var(--ink); }
+.kal-dow { font-size: 10px; fill: var(--muted); }
+.kal-auto { font-size: 13px; fill: var(--ink); }
+.kal-linia { stroke: var(--line); stroke-width: 1; }
+.kal-weekend { fill: #f1f2f5; }
+.kal-dzis { fill: #fde5e3; }
+.kal-pasek { stroke-width: 1.5; cursor: pointer; }
+.kal-pasek:hover { filter: brightness(0.92); }
+.kal-oczekujace { fill: #fff4d6; stroke: #c59a00; background: #fff4d6; }
+.kal-potwierdzone { fill: #cfeed5; stroke: #2a8a3e; background: #cfeed5; }
+.kal-zakonczone { fill: #d3e2f6; stroke: #2c63ad; background: #d3e2f6; }
+span.kal-probka { border: 1px solid #888; }

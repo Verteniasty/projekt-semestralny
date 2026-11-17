@@ -1,11 +1,20 @@
 <?php
 
+function zasob(string $plik): string
+{
+    $sciezka = __DIR__ . '/../public/' . $plik;
+    return $plik . (is_file($sciezka) ? '?v=' . filemtime($sciezka) : '');
+}
+
+
+
 function render_naglowek(string $tytul, string $aktywna = '', array $css = [], string $opis = ''): void
 {
     $u = aktualny_uzytkownik();
     $linki = [
         'glowna'  => ['Strona-glowna.php', 'Strona główna'],
         'garaz'   => ['Garaz.php', 'Garaż'],
+        'oferta'  => ['oferta.php', 'Oferta'],
         'onas'    => ['O-nas.php', 'O nas'],
         'kontakt' => ['Kontakt.php', 'Kontakt'],
     ];
@@ -22,9 +31,9 @@ function render_naglowek(string $tytul, string $aktywna = '', array $css = [], s
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="<?= e(zasob('style.css')) ?>">
 <?php foreach ($css as $plik): ?>
-    <link rel="stylesheet" href="<?= e($plik) ?>">
+    <link rel="stylesheet" href="<?= e(zasob($plik)) ?>">
 <?php endforeach; ?>
 </head>
 <body>
@@ -79,11 +88,12 @@ function render_stopka(): void
         </div>
     </footer>
 
-    <script src="index.js"></script>
+    <script src="<?= e(zasob('index.js')) ?>"></script>
 </body>
 </html>
 <?php
 }
+
 
 
 function pole(string $nazwa, string $etykieta, string $typ = 'text', string $wartosc = '', ?string $blad = null, string $atrybuty = ''): void
@@ -96,4 +106,41 @@ function pole(string $nazwa, string $etykieta, string $typ = 'text', string $war
         echo '<p class="err" id="' . $id . '-blad">' . e($blad) . '</p>';
     }
     echo '</div>';
+}
+
+
+
+function pole_lista(string $nazwa, string $etykieta, array $opcje, string $wybrana = '', ?string $blad = null, string $atrybuty = ''): void
+{
+    $id = 'f-' . $nazwa;
+    echo '<div class="row"><label for="' . $id . '">' . e($etykieta) . '</label>';
+    echo '<select id="' . $id . '" name="' . e($nazwa) . '"' . ($blad ? ' class="invalid" aria-invalid="true" aria-describedby="' . $id . '-blad"' : '') . ' ' . $atrybuty . '>';
+    foreach ($opcje as $wartosc => $nazwaOpcji) {
+        echo '<option value="' . e((string) $wartosc) . '"' . ((string) $wartosc === $wybrana ? ' selected' : '') . '>' . e($nazwaOpcji) . '</option>';
+    }
+    echo '</select>';
+    if ($blad) {
+        echo '<p class="err" id="' . $id . '-blad">' . e($blad) . '</p>';
+    }
+    echo '</div>';
+}
+
+
+function pole_tekst(string $nazwa, string $etykieta, string $wartosc = '', ?string $blad = null, string $atrybuty = ''): void
+{
+    $id = 'f-' . $nazwa;
+    echo '<div class="row"><label for="' . $id . '">' . e($etykieta) . '</label>';
+    echo '<textarea id="' . $id . '" name="' . e($nazwa) . '" rows="3"' . ($blad ? ' class="invalid" aria-invalid="true" aria-describedby="' . $id . '-blad"' : '') . ' ' . $atrybuty . '>' . e($wartosc) . '</textarea>';
+    if ($blad) {
+        echo '<p class="err" id="' . $id . '-blad">' . e($blad) . '</p>';
+    }
+    echo '</div>';
+}
+
+
+function pole_checkbox(string $nazwa, string $etykieta, bool $zaznaczone): void
+{
+    $id = 'f-' . $nazwa;
+    echo '<div class="row row-check"><label for="' . $id . '"><input id="' . $id . '" type="checkbox" name="' . e($nazwa) . '" value="1"'
+       . ($zaznaczone ? ' checked' : '') . '> ' . e($etykieta) . '</label></div>';
 }

@@ -17,7 +17,7 @@ if (metoda_post()) {
         $wynik = zaloguj($email, $haslo);
         if (!empty($wynik['ok'])) {
             flash('ok', 'Zalogowano pomyślnie. Witaj, ' . $wynik['imie'] . '!');
-            redirect(panel_roli($wynik['rola']));  
+            redirect(panel_roli($wynik['rola']));
         }
         $blad = $wynik['blad'];
     }

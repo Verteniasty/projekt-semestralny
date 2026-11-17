@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../src/bootstrap.php';
-tylko_dla_gosci();   
+tylko_dla_gosci();
 
 $dane  = ['imie' => '', 'nazwisko' => '', 'email' => '', 'telefon' => ''];
 $bledy = [];
@@ -15,10 +15,12 @@ if (metoda_post()) {
         $haslo  = post('haslo', false);
         $haslo2 = post('haslo2', false);
 
+
         $bledy = bledy_danych_osobowych($dane) + bledy_nowego_hasla($haslo, $haslo2);
         if ($e = blad_emaila($dane['email'])) {
             $bledy['email'] = $e;
         }
+
 
         if (!$bledy && db_wartosc('SELECT 1 FROM uzytkownicy WHERE email = ?', [$dane['email']])) {
             $bledy['email'] = 'Konto z tym adresem e-mail już istnieje.';
@@ -26,6 +28,7 @@ if (metoda_post()) {
 
         if (!$bledy) {
             try {
+
                 db()->prepare(
                     'INSERT INTO uzytkownicy (imie, nazwisko, email, haslo, numer_telefonu, rola)
                      VALUES (?, ?, ?, ?, ?, ?)'
@@ -40,6 +43,7 @@ if (metoda_post()) {
                 flash('ok', 'Konto zostało utworzone. Możesz się teraz zalogować.');
                 redirect('logowanie.php');
             } catch (PDOException $ex) {
+
                 if ($ex->getCode() === '23000') {
                     $bledy['email'] = 'Konto z tym adresem e-mail już istnieje.';
                 } else {

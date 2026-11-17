@@ -4,11 +4,32 @@ require __DIR__ . '/../src/flota.php';
 
 $etykiety = ['suv' => 'SUV', 'sedan' => 'Sedan', 'coupe' => 'Coupe', 'tuned' => 'Tuned'];
 
-$auta = array_map(function (array $a): array {
+$zBazy = [];
+try {
+    $st = db()->prepare('SELECT id, slug, cena, aktywne FROM uslugi WHERE slug IS NOT NULL AND typ = ?');
+    $st->execute(['doby']);
+    foreach ($st->fetchAll() as $w) {
+        $zBazy[$w['slug']] = $w;
+    }
+} catch (Throwable $ex) {
+    error_log('Garaż: brak danych z bazy: ' . $ex->getMessage());
+}
+
+
+$auta = [];
+foreach (flota() as $a) {
+    $w = $zBazy[$a['slug']] ?? null;
+    if ($w && !$w['aktywne']) {
+        continue;
+    }
+    if ($w) {
+        $a['cena'] = (int) round((float) $w['cena']);
+    }
     $plik = 'auta/' . $a['slug'] . '.jpg';
     $a['zdjecie'] = is_file(__DIR__ . '/' . $plik) ? $plik : null;
-    return $a;
-}, flota());
+    $a['rezerwuj'] = $w ? 'rezerwacja.php?usluga=' . (int) $w['id'] : 'oferta.php';
+    $auta[] = $a;
+}
 
 $mocMin = (int) (floor(min(array_column($auta, 'moc')) / 50) * 50);
 $mocMax = (int) (ceil(max(array_column($auta, 'moc')) / 50) * 50);
@@ -23,7 +44,7 @@ render_naglowek('Garaż – RentLoudCars', 'garaz', ['garaz-style.css'], 'Samoch
 <?php endif; ?>
             <div class="wrap">
                 <h1>Garaż</h1>
-                <p class="lead">Samochody sportowe i tuningowane do wynajęcia. Ceny od 500 do 10 000 zł za dobę.</p>
+                <p class="lead">Samochody sportowe i tuningowane do wynajęcia. Wynajem od 1 doby, ceny od <?= number_format(min(array_column($auta, 'cena')), 0, ',', "\u{00A0}") ?> do <?= number_format(max(array_column($auta, 'cena')), 0, ',', "\u{00A0}") ?> zł za dobę.</p>
             </div>
         </section>
 
@@ -66,7 +87,7 @@ render_naglowek('Garaż – RentLoudCars', 'garaz', ['garaz-style.css'], 'Samoch
                         <p class="price"><strong><?= number_format($a['cena'], 0, ',', "\u{00A0}") ?> zł</strong> / doba</p>
                         <div class="auto-foot">
                             <button type="button" class="btn small alt auto-open">Szczegóły</button>
-                            <a class="btn small" href="Strona-glowna.php#rezerwacja">Rezerwuj</a>
+                            <a class="btn small" href="<?= e($a['rezerwuj']) ?>">Rezerwuj</a>
                         </div>
                     </article>
 <?php endforeach; ?>
@@ -75,6 +96,7 @@ render_naglowek('Garaż – RentLoudCars', 'garaz', ['garaz-style.css'], 'Samoch
             </div>
         </section>
 
+        <!-- Okno ze szczegółami auta (wypełniane przez garaz.js) -->
         <dialog id="auto-modal" aria-labelledby="m-nazwa">
             <div class="m-media" id="m-media"></div>
             <div class="m-body">
@@ -84,12 +106,12 @@ render_naglowek('Garaż – RentLoudCars', 'garaz', ['garaz-style.css'], 'Samoch
                 <p id="m-opis"></p>
                 <dl class="m-spec" id="m-spec"></dl>
                 <p class="price"><strong id="m-cena"></strong> / doba</p>
-                <a class="btn" href="Strona-glowna.php#rezerwacja">Zarezerwuj</a>
+                <a class="btn" id="m-rezerwuj" href="oferta.php">Zarezerwuj</a>
             </div>
         </dialog>
 
     </main>
 
     <script type="application/json" id="flota-dane"><?= json_encode($auta, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
-    <script src="garaz.js"></script>
+    <script src="<?= e(zasob('garaz.js')) ?>"></script>
 <?php render_stopka(); ?>

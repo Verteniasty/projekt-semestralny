@@ -1,11 +1,15 @@
 <?php
 
+
+
+
 function wyslij_mail(string $do, string $temat, string $tresc): bool
 {
     $tryb = $GLOBALS['config']['mail_tryb'] ?? 'plik';
 
     if ($tryb === 'mail') {
         $od = $GLOBALS['config']['mail_od'] ?? 'no-reply@localhost';
+
         $do = str_replace(["\r", "\n"], '', $do);
         $naglowki = 'From: ' . str_replace(["\r", "\n"], '', $od) . "\r\n"
                   . "Content-Type: text/plain; charset=UTF-8\r\n";
