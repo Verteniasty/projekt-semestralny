@@ -45,7 +45,7 @@ CREATE TABLE uslugi (
     typ ENUM('doby', 'godziny') NOT NULL DEFAULT 'godziny',
     opis VARCHAR(512),
     czas_trwania INT NOT NULL,
-    cena DECIMAL(16,2) NOT NULL,          -- dla typu "doby" cena za jedną dobę
+    cena DECIMAL(16,2) NOT NULL,
     aktywne BOOLEAN NOT NULL DEFAULT TRUE,
 
     FOREIGN KEY (id_kategorii) REFERENCES kategorie_uslug(id) ON DELETE RESTRICT
@@ -84,11 +84,11 @@ CREATE TABLE rezerwacje (
     id_uzytkownika INT NOT NULL,
     id_pracownika INT NOT NULL,
     id_uslugi INT NOT NULL,
-    data_rezerwacji DATE NOT NULL,        -- dzień odbioru / początku wizyty
+    data_rezerwacji DATE NOT NULL,
     godzina_rozpoczecia TIME NOT NULL,
-    godzina_zakonczenia TIME NOT NULL,    -- wizyta: koniec; wynajem na doby: godzina zwrotu (= godzina odbioru)
-    data_zakonczenia DATE NOT NULL,       -- wizyta: ten sam dzień; wynajem na doby: dzień zwrotu
-    liczba_dob INT NULL,                  -- tylko wynajem na doby
+    godzina_zakonczenia TIME NOT NULL,
+    data_zakonczenia DATE NOT NULL,
+    liczba_dob INT NULL,
     status ENUM("oczekujace", "potwierdzone", "anulowane", "zakonczone") NOT NULL DEFAULT 'oczekujace',
     komentarz VARCHAR(512) NULL,
     cena DECIMAL(16,2) NOT NULL,
@@ -102,7 +102,7 @@ CREATE TABLE rezerwacje (
 CREATE INDEX idx_rezerwacje_data ON rezerwacje(data_rezerwacji);
 CREATE INDEX idx_rezerwacje_pracownik_dzien ON rezerwacje(id_pracownika, data_rezerwacji);
 
--- Historia zmian statusów rezerwacji (kto i kiedy zmienił status).
+
 CREATE TABLE historia_statusow (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_rezerwacji INT NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE historia_statusow (
     FOREIGN KEY (id_uzytkownika) REFERENCES uzytkownicy(id) ON DELETE SET NULL
 );
 
--- Log działań administratora (dodawanie, edycja, usuwanie, zmiany statusów).
+
 CREATE TABLE log_admina (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_admina INT NULL,
@@ -126,8 +126,8 @@ CREATE TABLE log_admina (
     FOREIGN KEY (id_admina) REFERENCES uzytkownicy(id) ON DELETE SET NULL
 );
 
--- Hasło wszystkich kont testowych: test123!
--- W bazie jest hash bcrypt (password_hash w PHP), każde konto ma własny "salt".
+
+
 
 INSERT INTO uzytkownicy (imie, nazwisko, email, haslo, numer_telefonu, rola) VALUES
 ("Tomasz", "Kuzicki", "Tomasz.Kuzicki@gmail.com", "$2y$10$wfduwn8Crbvgfvc0aSUqcez7Zsl9dKWm5A6THnLoLA38fUUqhrzby", "+48203591342", "klient"),
@@ -221,9 +221,9 @@ INSERT INTO uslugi_pracownikow (id_pracownika, id_uslugi) VALUES
 (1,32),
 (2,32);
 
--- Godziny pracy: dzien_tygodnia 1 = poniedziałek ... 7 = niedziela.
--- Jeden dzień może mieć kilka przedziałów (przerwa = luka między nimi).
--- Wiersz z wypełnioną datą nadpisuje ten dzień; początek = koniec oznacza dzień wolny.
+
+
+
 INSERT INTO godziny_pracy_pracownikow (id_pracownika, dzien_tygodnia, data, godzina_rozpoczecia, godzina_zakonczenia) VALUES
 (1, 1, NULL, "08:00:00", "12:00:00"),
 (1, 1, NULL, "12:30:00", "18:00:00"),
