@@ -1,8 +1,11 @@
 <?php
 
-const MAX_PROB    = 5;    
-const BLOKADA_MIN = 15;    
-const SESJA_CZAS  = 1800;  
+
+const MAX_PROB    = 5;
+const BLOKADA_MIN = 15;
+const SESJA_CZAS  = 1800;
+
+
 
 const DUMMY_HASH = '$2y$10$gpKoVlT3.th9OqILInd6KuewTmI/2jIBj52IEWqE55s6ITjiZ/tGm';
 
@@ -15,11 +18,15 @@ function panel_roli(string $rola): string
     };
 }
 
+
 function wyczysc_sesje(): void
 {
     $_SESSION = [];
     session_regenerate_id(true);
 }
+
+
+
 
 function aktualny_uzytkownik(): ?array
 {
@@ -39,6 +46,7 @@ function aktualny_uzytkownik(): ?array
             wyczysc_sesje();
             flash('err', 'Twoje konto jest nieaktywne lub nie istnieje.');
         } elseif ((int) $u['wersja_sesji'] !== (int) ($_SESSION['wersja'] ?? -1)) {
+
             $u = null;
             wyczysc_sesje();
             flash('err', 'Zostałeś wylogowany, bo zmieniono hasło lub wylogowano Cię ze wszystkich urządzeń. Zaloguj się ponownie.');
@@ -60,12 +68,16 @@ function wymagaj_logowania(): array
     }
     return $u;
 }
+
+
+
 function tylko_dla_gosci(): void
 {
     if ($u = aktualny_uzytkownik()) {
         redirect(panel_roli($u['rola']));
     }
 }
+
 
 function wymagaj_roli(string ...$role): array
 {
@@ -83,9 +95,10 @@ function wymagaj_roli(string ...$role): array
     return $u;
 }
 
+
 function zaloguj(string $email, string $haslo): array
 {
-    $blad = 'Nieprawidłowy e-mail lub hasło.';   
+    $blad = 'Nieprawidłowy e-mail lub hasło.';
 
     $st = db()->prepare(
         'SELECT id, imie, nazwisko, haslo, rola, aktywne, nieudane_proby, zablokowany_do, wersja_sesji
@@ -99,7 +112,7 @@ function zaloguj(string $email, string $haslo): array
         return ['blad' => $blad];
     }
 
-   
+
     $blokadaDo = $u['zablokowany_do'] ? (int) strtotime($u['zablokowany_do']) : 0;
     if ($blokadaDo > time()) {
         $min = max(1, (int) ceil(($blokadaDo - time()) / 60));
@@ -121,7 +134,7 @@ function zaloguj(string $email, string $haslo): array
         return ['blad' => 'To konto jest nieaktywne. Skontaktuj się z obsługą.'];
     }
 
-    
+
     db()->prepare('UPDATE uzytkownicy SET nieudane_proby = 0, zablokowany_do = NULL WHERE id = ?')
         ->execute([$u['id']]);
     if (password_needs_rehash($u['haslo'], PASSWORD_DEFAULT)) {
@@ -129,7 +142,7 @@ function zaloguj(string $email, string $haslo): array
             ->execute([password_hash($haslo, PASSWORD_DEFAULT), $u['id']]);
     }
 
-    session_regenerate_id(true);  
+    session_regenerate_id(true);
     $_SESSION = [
         'uid'      => (int) $u['id'],
         'wersja'   => (int) $u['wersja_sesji'],
@@ -140,6 +153,10 @@ function zaloguj(string $email, string $haslo): array
     ];
     return ['ok' => true, 'rola' => $u['rola'], 'imie' => $u['imie']];
 }
+
+
+
+
 function uniewaznij_sesje(int $idUzytkownika): int
 {
     db()->prepare('UPDATE uzytkownicy SET wersja_sesji = wersja_sesji + 1 WHERE id = ?')
@@ -148,6 +165,8 @@ function uniewaznij_sesje(int $idUzytkownika): int
     $st->execute([$idUzytkownika]);
     return (int) $st->fetchColumn();
 }
+
+
 
 function zmien_haslo(int $idUzytkownika, string $noweHaslo): int
 {

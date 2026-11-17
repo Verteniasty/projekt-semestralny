@@ -1,7 +1,17 @@
 <?php
 
-const TOKEN_WAZNOSC_MIN = 60;   
-const TOKEN_ODSTEP_SEK  = 60;   
+
+
+
+
+
+
+
+const TOKEN_WAZNOSC_MIN = 60;
+const TOKEN_ODSTEP_SEK  = 60;
+
+
+
 
 function adres_aplikacji(): string
 {
@@ -18,6 +28,8 @@ function adres_aplikacji(): string
     return $schemat . '://' . $host . $katalog;
 }
 
+
+
 function wyslij_link_resetu(string $email): ?string
 {
     $st = db()->prepare('SELECT id, imie FROM uzytkownicy WHERE email = ? AND aktywne = 1');
@@ -30,12 +42,14 @@ function wyslij_link_resetu(string $email): ?string
     $teraz = time();
     db()->prepare('DELETE FROM tokeny_hasla WHERE wazny_do < ?')->execute([date('Y-m-d H:i:s', $teraz)]);
 
+
     $st = db()->prepare('SELECT MAX(utworzony) FROM tokeny_hasla WHERE id_uzytkownika = ?');
     $st->execute([$u['id']]);
     $ostatni = $st->fetchColumn();
     if ($ostatni && strtotime($ostatni) > $teraz - TOKEN_ODSTEP_SEK) {
         return null;
     }
+
 
     db()->prepare('DELETE FROM tokeny_hasla WHERE id_uzytkownika = ?')->execute([$u['id']]);
 
@@ -58,6 +72,7 @@ function wyslij_link_resetu(string $email): ?string
     return $link;
 }
 
+
 function znajdz_wazny_token(string $token): ?array
 {
     if (!preg_match('/^[0-9a-f]{64}$/', $token)) {
@@ -67,6 +82,9 @@ function znajdz_wazny_token(string $token): ?array
     $st->execute([hash('sha256', $token), date('Y-m-d H:i:s')]);
     return $st->fetch() ?: null;
 }
+
+
+
 
 function zuzyj_token_i_ustaw_haslo(string $token, string $noweHaslo): bool
 {

@@ -61,8 +61,9 @@ function csrf_sprawdz(): bool
     $podany = $_POST['csrf'] ?? '';
     return is_string($podany)
         && isset($_SESSION['csrf'])
-        && hash_equals($_SESSION['csrf'], $podany);   
+        && hash_equals($_SESSION['csrf'], $podany);
 }
+
 
 function db_wartosc(string $sql, array $parametry = []): mixed
 {

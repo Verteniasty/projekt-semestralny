@@ -1,8 +1,12 @@
 <?php
 
+
+
+
 function flota(): array
 {
     return [
+
         ['slug' => 'bmw-m3-competition', 'nazwa' => 'BMW M3 Competition', 'rok' => 2023, 'kat' => 'sedan',
          'moc' => 510, 'silnik' => '3.0 R6 biturbo', 'naped' => 'Tylny', 'przysp' => 3.5, 'cena' => 990,
          'skrot' => 'Sedan na co dzień, a na torze zamienia się w bestię.',
@@ -20,6 +24,20 @@ function flota(): array
          'skrot' => 'Amerykański V8 z kompresorem, słychać go z dwóch ulic dalej.',
          'opis' => 'Wielki sedan z kompresorem, który wyje jak turbina. Mocny, cięższy i bardziej surowy niż niemieccy rywale, ale właśnie za to go lubimy. Jeśli chcesz auta z prawdziwym amerykańskim charakterem, to jest ono dla Ciebie.'],
 
+        ['slug' => 'bmw-m5-f90-competition', 'nazwa' => 'BMW M5 F90 Competition', 'rok' => 2021, 'kat' => 'sedan',
+         'moc' => 625, 'silnik' => '4.4 V8 biturbo', 'naped' => 'xDrive (z trybem 2WD)', 'przysp' => 3.3, 'cena' => 1600,
+         'skrot' => 'M5 F90: limuzyna, która w trybie 2WD pali gumę na każdym rondzie.',
+         'opis' => 'Kultowe M5 w generacji F90 z podkręconym V8 o mocy 625 KM. Napęd xDrive daje pewność na mokrym, a po wyłączeniu systemu stabilizacji i przełączeniu na tył auto zamienia się w dymiącą bestię. Wydech z klapami brzmi głęboko już na biegu jałowym. Idealne na wyjazd weekendowy, ślub albo po prostu na to, żeby ludzie się odwracali.'],
+        ['slug' => 'mercedes-e63s', 'nazwa' => 'Mercedes-AMG E63 S', 'rok' => 2020, 'kat' => 'sedan',
+         'moc' => 612, 'silnik' => '4.0 V8 biturbo', 'naped' => '4x4 (z trybem Drift)', 'przysp' => 3.4, 'cena' => 1300,
+         'skrot' => 'Klasa E z V8, która mruczy w mieście i ryczy na autostradzie.',
+         'opis' => 'Wygodna limuzyna z silnikiem prosto z AMG GT. W trybie Drift napęd idzie tylko na tył, a wydech trzaska przy każdym zredukowaniu biegu. Mieści pięć osób i bagaż, więc nadaje się na wyjazd w gronie znajomych, a do tego robi wrażenie pod każdym hotelem.'],
+        ['slug' => 'audi-rs6-avant', 'nazwa' => 'Audi RS6 Avant', 'rok' => 2022, 'kat' => 'sedan',
+         'moc' => 600, 'silnik' => '4.0 V8 biturbo', 'naped' => 'Quattro', 'przysp' => 3.6, 'cena' => 1500,
+         'skrot' => 'Kombi z 600 KM: zabierze bagaż i zostawi sportowe auta z tyłu.',
+         'opis' => 'Najszybsze rodzinne kombi, jakie możesz wynająć. Quattro i V8 biturbo sprawiają, że ruszasz jak z katapulty, a w bagażniku nadal mieści się sprzęt na tydzień. Sportowy wydech dodaje charakteru, którego nie ma w zwykłych kombi.'],
+
+
         ['slug' => 'bmw-x5-m-competition', 'nazwa' => 'BMW X5 M Competition', 'rok' => 2022, 'kat' => 'suv',
          'moc' => 625, 'silnik' => '4.4 V8 biturbo', 'naped' => '4x4', 'przysp' => 3.8, 'cena' => 1500,
          'skrot' => 'Rodzinny SUV, który zostawi większość sportowych aut z tyłu.',
@@ -36,6 +54,7 @@ function flota(): array
          'moc' => 650, 'silnik' => '4.0 V8 biturbo', 'naped' => '4x4', 'przysp' => 3.6, 'cena' => 4200,
          'skrot' => 'Supersamochód w ciele SUV-a, widać go z daleka.',
          'opis' => 'Urus łączy praktyczność SUV-a z charakterem Lamborghini. Wchodzi się do niego jak do kokpitu, a pod maską pracuje głośne V8. Na wesele, sesję zdjęciową albo po prostu żeby poczuć się wyjątkowo.'],
+
 
         ['slug' => 'ford-mustang-gt', 'nazwa' => 'Ford Mustang GT', 'rok' => 2021, 'kat' => 'coupe',
          'moc' => 450, 'silnik' => '5.0 V8', 'naped' => 'Tylny', 'przysp' => 4.3, 'cena' => 690,
@@ -57,6 +76,12 @@ function flota(): array
          'moc' => 830, 'silnik' => '3.0 V6 + hybryda', 'naped' => 'Tylny', 'przysp' => 2.9, 'cena' => 9500,
          'skrot' => 'Flagowiec floty: 830 KM i hybrydowy napęd.',
          'opis' => 'Najszybsze i najdroższe auto w naszym garażu. Połączenie V6 i silnika elektrycznego daje błyskawiczną reakcję na gaz. Wynajem tylko dla doświadczonych kierowców, ale wrażenia są niepowtarzalne.'],
+
+        ['slug' => 'bmw-m4-csl', 'nazwa' => 'BMW M4 CSL', 'rok' => 2023, 'kat' => 'coupe',
+         'moc' => 550, 'silnik' => '3.0 R6 biturbo', 'naped' => 'Tylny', 'przysp' => 3.7, 'cena' => 2900,
+         'skrot' => 'Lekkie coupe z toru, limitowana seria i dźwięk jak z wyścigówki.',
+         'opis' => 'Limitowana, odchudzona wersja M4 z mocą 550 KM i napędem na tył. Sztywne zawieszenie, lekkie elementy z karbonu i głośny wydech robią z niej auto na zamknięty tor lub krętą górską drogę. Dla tych, którzy chcą poczuć każdy zakręt.'],
+
 
         ['slug' => 'bmw-m3-stage3', 'nazwa' => 'BMW M3 Competition Stage 3', 'rok' => 2023, 'kat' => 'tuned',
          'moc' => 900, 'plus' => true, 'silnik' => '3.0 R6 biturbo (większe turbiny)', 'naped' => 'Tylny', 'przysp' => 2.8, 'cena' => 3500,
@@ -82,8 +107,29 @@ function flota(): array
          'moc' => 800, 'plus' => true, 'silnik' => '4.0 V8 biturbo (po tuningu)', 'naped' => '4x4', 'przysp' => 3.7, 'cena' => 6800,
          'skrot' => 'Kultowa G-klasa z 800+ KM i głośnym wydechem. Auto, które robi show.',
          'opis' => 'G63 po modyfikacjach: podniesiona moc, sportowy wydech i nowa mapa silnika. Wygląda jak twierdza, a przyspiesza jak sportowe coupe. Idealne na wyjątkowe okazje i sesje zdjęciowe.'],
+        ['slug' => 'gpower-m5-hurricane-rs', 'nazwa' => 'G-Power M5 F90 Hurricane RS', 'rok' => 2021, 'kat' => 'tuned',
+         'moc' => 800, 'plus' => true, 'silnik' => '4.4 V8 biturbo (pakiet G-Power)', 'naped' => 'xDrive', 'przysp' => 2.7, 'cena' => 3900,
+         'skrot' => 'M5 F90 po przeróbce G-Power: 800+ KM i wydech, który budzi osiedle.',
+         'opis' => 'M5 F90 z pakietem G-Power Hurricane RS: większe turbosprężarki, nowa mapa i sportowy układ wydechowy. Auto jest wyraźnie głośniejsze i dużo szybsze od seryjnego, a przy tym nadal komfortowe na długiej trasie. Na prośbę pokazujemy, jak działa launch control. Dla kierowców, którzy mają doświadczenie z mocnymi autami.'],
+        ['slug' => 'manhart-mh5-700', 'nazwa' => 'Manhart MH5 700 (BMW M5 F90)', 'rok' => 2020, 'kat' => 'tuned',
+         'moc' => 700, 'plus' => true, 'silnik' => '4.4 V8 biturbo (pakiet Manhart)', 'naped' => 'xDrive', 'przysp' => 3.0, 'cena' => 3200,
+         'skrot' => 'M5 po tuningu Manhart: 700+ KM i brzmienie, od którego drżą szyby.',
+         'opis' => 'M5 F90 po modyfikacjach Manhart: podniesiona moc, sportowy wydech z klapami i dopracowane zawieszenie. Auto jest głośne, bardzo szybkie i wciąż wygodne. Świetny wybór na weekend, na którym chcesz być słyszany z daleka.'],
+        ['slug' => 'manhart-mh4-m4', 'nazwa' => 'Manhart MH4 (BMW M4 Competition)', 'rok' => 2022, 'kat' => 'tuned',
+         'moc' => 620, 'plus' => true, 'silnik' => '3.0 R6 biturbo (pakiet Manhart)', 'naped' => 'Tylny', 'przysp' => 3.1, 'cena' => 2600,
+         'skrot' => 'M4 z pakietem Manhart: 620+ KM, napęd na tył i strzały z wydechu.',
+         'opis' => 'M4 Competition z podniesioną mocą, wydechem sportowym i zawieszeniem gwintowanym. Napęd na tył i ostry charakter sprawiają, że auto wymaga szacunku, ale odwdzięcza się świetnym prowadzeniem. Na prośbę wynajmujemy je z wpisem do umowy o zamkniętym torze.'],
+        ['slug' => 'brabus-g800-widestar', 'nazwa' => 'Brabus G 800 Widestar (G63)', 'rok' => 2022, 'kat' => 'tuned',
+         'moc' => 800, 'silnik' => '4.0 V8 biturbo (pakiet Brabus)', 'naped' => '4x4', 'przysp' => 3.6, 'cena' => 7900,
+         'skrot' => 'Brabus 800 na bazie G63: najgłośniejsza twierdza na kołach.',
+         'opis' => 'G-klasa po pracach Brabusa: 800 KM, szersze nadkola i wydech, który słychać w całym mieście. Auto robi show na każdej ulicy, a w środku jest tak wygodne jak limuzyna. Do wynajmu na wyjątkowe okazje, wesela i sesje zdjęciowe. Wymagamy zwiększonej kaucji.'],
+        ['slug' => 'brabus-800-e63', 'nazwa' => 'Brabus 800 (Mercedes-AMG E63 S)', 'rok' => 2019, 'kat' => 'tuned',
+         'moc' => 800, 'silnik' => '4.0 V8 biturbo (pakiet Brabus)', 'naped' => '4x4', 'przysp' => 2.8, 'cena' => 4800,
+         'skrot' => 'Limuzyna z 800 KM od Brabusa: w garniturze, ale z pazurami.',
+         'opis' => 'Klasa E po pracach Brabusa: 800 KM i sportowy wydech. Z zewnątrz wygląda dyskretnie, ale po wciśnięciu gazu pokazuje, na co ją stać. Dla kierowców, którzy wolą wrażenie niespodzianki od krzykliwego wyglądu.'],
     ];
 }
+
 
 function moc_txt(array $a): string
 {

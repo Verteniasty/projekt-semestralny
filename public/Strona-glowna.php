@@ -1,5 +1,33 @@
 <?php
 require __DIR__ . '/../src/bootstrap.php';
+require __DIR__ . '/../src/flota.php';
+
+$wybrane = ['bmw-m5-f90-competition', 'brabus-g800-widestar', 'gpower-m5-hurricane-rs'];
+$polecane = [];
+foreach (flota() as $a) {
+    if (in_array($a['slug'], $wybrane, true)) {
+        $a['rezerwuj'] = 'oferta.php';
+        $polecane[] = $a;
+    }
+}
+try {
+    $st = db()->prepare('SELECT id, slug, cena FROM uslugi WHERE slug IS NOT NULL AND typ = ? AND aktywne = 1');
+    $st->execute(['doby']);
+    $zBazy = [];
+    foreach ($st->fetchAll() as $w) {
+        $zBazy[$w['slug']] = $w;
+    }
+    foreach ($polecane as $i => $a) {
+        if (isset($zBazy[$a['slug']])) {
+            $polecane[$i]['cena'] = (int) round((float) $zBazy[$a['slug']]['cena']);
+            $polecane[$i]['rezerwuj'] = 'rezerwacja.php?usluga=' . (int) $zBazy[$a['slug']]['id'];
+        }
+    }
+} catch (Throwable $ex) {
+    error_log('Strona główna: brak danych z bazy: ' . $ex->getMessage());
+}
+$liczbaAut = count(flota());
+
 render_naglowek('RentLoudCars – wypożyczalnia głośnych aut', 'glowna', [], 'Wypożyczalnia samochodów z charakterem. V8, turbo i wydechy, które słychać. Rezerwacja online od 1 doby.');
 ?>
     <main id="main">
@@ -9,11 +37,11 @@ render_naglowek('RentLoudCars – wypożyczalnia głośnych aut', 'glowna', [], 
                 <h1>Wynajmij auto,<br>które słychać<br>zanim wjedziesz.</h1>
                 <p class="lead">V8, turbo i sportowe wydechy. Odbierasz kluczyki w 15 minut, bez kaucji ukrytej drobnym drukiem.</p>
                 <div class="hero-actions">
-                    <a class="btn" href="#rezerwacja">Zarezerwuj auto</a>
+                    <a class="btn" href="oferta.php">Zarezerwuj auto</a>
                     <a class="btn ghost" href="Garaz.php">Zobacz garaż</a>
                 </div>
                 <dl class="facts">
-                    <div><dt>12</dt><dd>aut w garażu</dd></div>
+                    <div><dt><?= (int) $liczbaAut ?></dt><dd>aut w garażu</dd></div>
                     <div><dt>od 1 doby</dt><dd>minimalny wynajem</dd></div>
                     <div><dt>24/7</dt><dd>pomoc drogowa</dd></div>
                 </dl>
@@ -25,27 +53,19 @@ render_naglowek('RentLoudCars – wypożyczalnia głośnych aut', 'glowna', [], 
                 <h2>Najczęściej wynajmowane</h2>
                 <p class="sub">Ceny za dobę, limit 250 km. Pełna oferta w garażu.</p>
                 <div class="cards">
+<?php foreach ($polecane as $a): ?>
                     <article class="card">
-                        <div class="thumb" role="img" aria-label="Miejsce na zdjęcie Forda Mustanga">Mustang GT</div>
-                        <h3>Ford Mustang GT</h3>
-                        <p>5.0 V8, 450 KM, manual. Klasyk, który brzmi jak amerykańska niedziela.</p>
-                        <p class="price"><strong>690 zł</strong> / doba</p>
-                        <a class="btn small" href="#rezerwacja" data-car="mustang">Wybierz</a>
+<?php if (is_file(__DIR__ . '/auta/' . $a['slug'] . '.jpg')): ?>
+                        <div class="thumb"><img src="auta/<?= e($a['slug']) ?>.jpg" alt="<?= e($a['nazwa']) ?>" loading="lazy"></div>
+<?php else: ?>
+                        <div class="thumb brak"><span class="nazwa-auta"><?= e($a['nazwa']) ?></span></div>
+<?php endif; ?>
+                        <h3><?= e($a['nazwa']) ?></h3>
+                        <p><?= e($a['silnik']) ?>, <?= e(moc_txt($a)) ?> KM. <?= e($a['skrot']) ?></p>
+                        <p class="price"><strong><?= number_format((int) $a['cena'], 0, ',', "\u{00A0}") ?> zł</strong> / doba</p>
+                        <a class="btn small" href="<?= e($a['rezerwuj']) ?>">Wynajmij</a>
                     </article>
-                    <article class="card">
-                        <div class="thumb" role="img" aria-label="Miejsce na zdjęcie BMW M3">BMW M3</div>
-                        <h3>BMW M3 Competition</h3>
-                        <p>3.0 biturbo, 510 KM, napęd na tył. Do jazdy, przy której nie odbiera się telefonów.</p>
-                        <p class="price"><strong>990 zł</strong> / doba</p>
-                        <a class="btn small" href="#rezerwacja" data-car="m3">Wybierz</a>
-                    </article>
-                    <article class="card">
-                        <div class="thumb" role="img" aria-label="Miejsce na zdjęcie Audi RS3">Audi RS3</div>
-                        <h3>Audi RS3</h3>
-                        <p>Pięć cylindrów, 400 KM, quattro. Głośne, szybkie i sprawdzi się też w deszczu.</p>
-                        <p class="price"><strong>820 zł</strong> / doba</p>
-                        <a class="btn small" href="#rezerwacja" data-car="rs3">Wybierz</a>
-                    </article>
+<?php endforeach; ?>
                 </div>
             </div>
         </section>
@@ -54,7 +74,7 @@ render_naglowek('RentLoudCars – wypożyczalnia głośnych aut', 'glowna', [], 
             <div class="wrap">
                 <h2>Jak to działa</h2>
                 <ol class="steps">
-                    <li><h3>Wybierasz auto i termin</h3><p>Formularz poniżej liczy koszt od razu.</p></li>
+                    <li><h3>Wybierasz auto i doby</h3><p>Formularz pokazuje wolne godziny odbioru i liczy koszt od razu.</p></li>
                     <li><h3>Potwierdzamy rezerwację</h3><p>Oddzwaniamy lub piszemy w ciągu godziny.</p></li>
                     <li><h3>Odbierasz kluczyki</h3><p>Wystarczy prawo jazdy i dowód. Umowa trwa 15 minut.</p></li>
                 </ol>
@@ -75,47 +95,12 @@ render_naglowek('RentLoudCars – wypożyczalnia głośnych aut', 'glowna', [], 
 
         <section class="block alt" id="rezerwacja">
             <div class="wrap narrow">
-                <h2>Zarezerwuj auto</h2>
-                <form id="booking" novalidate>
-                    <?= csrf_pole() ?>
-                    <div class="row">
-                        <label for="car">Auto</label>
-                        <select id="car" name="car" required>
-                            <option value="">Wybierz auto</option>
-                            <option value="mustang" data-price="690">Ford Mustang GT – 690 zł</option>
-                            <option value="m3" data-price="990">BMW M3 Competition – 990 zł</option>
-                            <option value="rs3" data-price="820">Audi RS3 – 820 zł</option>
-                        </select>
-                        <p class="err" data-for="car"></p>
-                    </div>
-                    <div class="grid2">
-                        <div class="row">
-                            <label for="from">Odbiór</label>
-                            <input type="date" id="from" name="from" required>
-                            <p class="err" data-for="from"></p>
-                        </div>
-                        <div class="row">
-                            <label for="to">Zwrot</label>
-                            <input type="date" id="to" name="to" required>
-                            <p class="err" data-for="to"></p>
-                        </div>
-                    </div>
-                    <div class="grid2">
-                        <div class="row">
-                            <label for="name">Imię i nazwisko</label>
-                            <input type="text" id="name" name="name" autocomplete="name" required>
-                            <p class="err" data-for="name"></p>
-                        </div>
-                        <div class="row">
-                            <label for="email">E-mail</label>
-                            <input type="email" id="email" name="email" autocomplete="email" required>
-                            <p class="err" data-for="email"></p>
-                        </div>
-                    </div>
-                    <p class="total" aria-live="polite" id="total">Wybierz auto i daty, żeby zobaczyć cenę.</p>
-                    <button type="submit" class="btn">Wyślij rezerwację</button>
-                    <p class="ok" id="ok" hidden></p>
-                </form>
+                <h2>Zarezerwuj auto na doby</h2>
+                <p>Wybierz auto, pracownika, dzień odbioru i liczbę dób. Pokażemy tylko godziny, które są naprawdę wolne, a rezerwację zobaczysz w swoim koncie. Chcesz najpierw sprawdzić auto? Umów jazdę próbną na godzinę.</p>
+                <p>
+                    <a class="btn" href="rezerwacja.php">Wybierz auto i termin</a>
+                    <a class="btn alt" href="oferta.php">Zobacz ofertę</a>
+                </p>
             </div>
         </section>
 

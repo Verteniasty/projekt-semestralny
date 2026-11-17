@@ -14,6 +14,7 @@ if (metoda_post()) {
     } elseif ($e = blad_emaila($email)) {
         $blad = $e;
     } else {
+
         $link    = wyslij_link_resetu($email);
         $wyslano = true;
     }

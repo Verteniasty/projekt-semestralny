@@ -1,3 +1,4 @@
+// Garaż: filtrowanie po kategorii i mocy, sortowanie oraz okno ze szczegółami auta.
 (() => {
   const lista = document.getElementById('flota');
   if (!lista) return;
@@ -44,6 +45,7 @@
   sortSel.addEventListener('change', odswiez);
   odswiez();
 
+  // ----- okno szczegółów -----
   const modal = document.getElementById('auto-modal');
   const NAZWY_KAT = { suv: 'SUV', sedan: 'Sedan', coupe: 'Coupe', tuned: 'Tuned' };
   const el = id => document.getElementById(id);
@@ -57,6 +59,7 @@
     el('m-kat').textContent = NAZWY_KAT[a.kat] || '';
     el('m-opis').textContent = a.opis;
     el('m-cena').textContent = a.cena.toLocaleString('pl-PL') + ' zł';
+    el('m-rezerwuj').href = a.rezerwuj || 'oferta.php';
 
     const media = el('m-media');
     media.replaceChildren();
@@ -89,12 +92,13 @@
     modal.showModal();
   }
 
+  // Kliknięcie w kartę otwiera szczegóły (poza przyciskiem „Rezerwuj”).
   lista.addEventListener('click', e => {
     if (e.target.closest('a')) return;
     const karta = e.target.closest('.auto');
     if (karta) otworz(karta.dataset.slug);
   });
-  modal.addEventListener('click', e => { if (e.target === modal) modal.close(); });  
+  modal.addEventListener('click', e => { if (e.target === modal) modal.close(); });   // klik w tło
   modal.querySelector('.m-close').addEventListener('click', () => modal.close());
   modal.addEventListener('close', () => { document.body.style.overflow = ''; });
 })();

@@ -1,10 +1,10 @@
 <?php
 require __DIR__ . '/../src/bootstrap.php';
-$u = wymagaj_logowania();  
+$u = wymagaj_logowania();
 
 $dane   = ['imie' => $u['imie'], 'nazwisko' => $u['nazwisko'], 'telefon' => $u['numer_telefonu']];
-$bledyD = [];   
-$bledyH = [];   
+$bledyD = [];
+$bledyH = [];
 
 if (metoda_post()) {
     if (!csrf_sprawdz()) {
@@ -19,6 +19,7 @@ if (metoda_post()) {
         }
         $bledyD = bledy_danych_osobowych($dane);
         if (!$bledyD) {
+
             db()->prepare('UPDATE uzytkownicy SET imie = ?, nazwisko = ?, numer_telefonu = ? WHERE id = ?')
                 ->execute([$dane['imie'], $dane['nazwisko'], normalizuj_telefon($dane['telefon']), $u['id']]);
             flash('ok', 'Dane zostały zapisane.');
@@ -35,6 +36,7 @@ if (metoda_post()) {
         }
         $bledyH += bledy_nowego_hasla($nowe, $nowe2, 'nowe', 'nowe2');
         if (!$bledyH) {
+
             $_SESSION['wersja'] = zmien_haslo((int) $u['id'], $nowe);
             session_regenerate_id(true);
             flash('ok', 'Hasło zostało zmienione. Inne urządzenia zostały wylogowane.');

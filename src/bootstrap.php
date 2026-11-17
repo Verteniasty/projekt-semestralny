@@ -1,6 +1,8 @@
 <?php
 
-date_default_timezone_set('Europe/Warsaw');  
+
+date_default_timezone_set('Europe/Warsaw');
+
 $plikConfig = __DIR__ . '/config.php';
 if (!is_file($plikConfig)) {
     http_response_code(500);
@@ -10,7 +12,7 @@ $GLOBALS['config'] = require $plikConfig;
 
 error_reporting(E_ALL);
 ini_set('display_errors', !empty($GLOBALS['config']['debug']) ? '1' : '0');
-ini_set('zend.exception_ignore_args', '1'); 
+ini_set('zend.exception_ignore_args', '1');
 
 require __DIR__ . '/pomocnicze.php';
 require __DIR__ . '/db.php';
@@ -18,7 +20,11 @@ require __DIR__ . '/walidacja.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/mail.php';
 require __DIR__ . '/reset.php';
+require __DIR__ . '/dostepnosc.php';
+require __DIR__ . '/rezerwacje.php';
+require __DIR__ . '/admin.php';
 require __DIR__ . '/layout.php';
+
 
 set_exception_handler(function (Throwable $ex) {
     error_log((string) $ex);
@@ -36,7 +42,7 @@ set_exception_handler(function (Throwable $ex) {
 });
 
 
-header('Cache-Control: no-store, max-age=0');  
+header('Cache-Control: no-store, max-age=0');
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: strict-origin-when-cross-origin');
@@ -44,6 +50,7 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 header("Content-Security-Policy: default-src 'self'; script-src 'self'; "
      . "style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; "
      . "img-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
+
 
 
 $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
@@ -58,6 +65,7 @@ session_set_cookie_params([
 ini_set('session.use_strict_mode', '1');
 ini_set('session.use_only_cookies', '1');
 session_start();
+
 
 if (isset($_SESSION['uid'])) {
     if (time() - ($_SESSION['ostatnia'] ?? 0) > SESJA_CZAS) {

@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../src/bootstrap.php';
-header('Referrer-Policy: no-referrer');  
+header('Referrer-Policy: no-referrer');
+tylko_dla_gosci();
 
 
 $token = metoda_post() ? post('token') : pobierz('token');
@@ -19,7 +20,7 @@ if ($wpis && metoda_post()) {
                 flash('ok', 'Hasło zostało zmienione. Zaloguj się nowym hasłem.');
                 redirect('logowanie.php');
             }
-            $wpis = null;   
+            $wpis = null;
         }
     }
 }
