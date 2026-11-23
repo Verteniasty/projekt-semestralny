@@ -248,7 +248,8 @@ const REZERWACJE_SELECT =
 
 function rezerwacja_po_id(int $id): ?array
 {
-    $st = db()->prepare(REZERWACJE_SELECT . ' WHERE r.id = ?');
+    // widok v_rezerwacje (database.sql) łączy rezerwację z usługą, klientem i pracownikiem
+    $st = db()->prepare('SELECT * FROM v_rezerwacje WHERE id = ?');
     $st->execute([$id]);
     return $st->fetch() ?: null;
 }
@@ -372,11 +373,8 @@ function cena_txt($cena): string
 
 function oferta_uslug(): array
 {
-    $st = db()->prepare(
-        'SELECT us.id, us.nazwa, us.slug, us.typ, us.opis, us.czas_trwania, us.cena, k.id AS id_kategorii, k.nazwa AS kategoria
-         FROM uslugi us JOIN kategorie_uslug k ON k.id = us.id_kategorii
-         WHERE us.aktywne = 1 ORDER BY k.nazwa, us.cena, us.nazwa'
-    );
+    // widok v_oferta (database.sql): aktywne usługi razem z nazwą kategorii
+    $st = db()->prepare('SELECT * FROM v_oferta ORDER BY kategoria, cena, nazwa');
     $st->execute();
     return $st->fetchAll();
 }

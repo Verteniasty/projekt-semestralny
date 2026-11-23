@@ -40,6 +40,12 @@ if (metoda_post()) {
                     normalizuj_telefon($dane['telefon']),
                     'klient',
                 ]);
+                try {
+                    wyslij_mail(strtolower($dane['email']), 'Witaj w RentLoudCars',
+                        "Cześć {$dane['imie']},\n\nTwoje konto w RentLoudCars zostało utworzone. Możesz się zalogować i rezerwować auta.\n\nRentLoudCars");
+                } catch (Throwable $ex) {
+                    error_log('Mail powitalny nie został wysłany: ' . $ex->getMessage());
+                }
                 flash('ok', 'Konto zostało utworzone. Możesz się teraz zalogować.');
                 redirect('logowanie.php');
             } catch (PDOException $ex) {

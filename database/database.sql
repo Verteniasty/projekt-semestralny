@@ -1,10 +1,10 @@
-DROP DATABASE IF EXISTS Wypozyczalnia;
+-- DROP DATABASE IF EXISTS Wypozyczalnia;
 
-CREATE DATABASE IF NOT EXISTS Wypozyczalnia
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
+-- CREATE DATABASE IF NOT EXISTS Wypozyczalnia
+-- CHARACTER SET utf8mb4
+-- COLLATE utf8mb4_unicode_ci;
 
-USE Wypozyczalnia;
+-- USE Wypozyczalnia;
 
 CREATE TABLE uzytkownicy (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -282,3 +282,106 @@ INSERT INTO log_admina (id_admina, akcja, opis, utworzony) VALUES
 (5, "usluga_dodanie", "Dodano usługę: Brabus G 800 Widestar (G63)", "2026-10-20 09:12:00"),
 (5, "pracownik_edycja", "Zmieniono pracownika #2 (usługi: 16)", "2026-10-20 09:30:00"),
 (5, "dostepnosc_tydzien", "Zmieniono godziny pracy pracownika #2: Kamil Woźnica", "2026-10-20 09:41:00");
+
+
+-- =====================================================================
+-- WIDOKI, FUNKCJE, PROCEDURY I WYZWALACZE
+-- (opis w docs/OPIS-ROZWIAZAN-BAZY.txt)
+-- =====================================================================
+
+-- Widok: aktywna oferta z nazwą kategorii (używany przez stronę oferty)
+CREATE OR REPLACE VIEW v_oferta AS
+SELECT us.id, us.nazwa, us.slug, us.typ, us.opis, us.czas_trwania, us.cena,
+       k.id AS id_kategorii, k.nazwa AS kategoria
+FROM uslugi us
+JOIN kategorie_uslug k ON k.id = us.id_kategorii
+WHERE us.aktywne = 1;
+
+-- Widok: rezerwacja razem z usługą, klientem i pracownikiem (maile, szczegóły)
+CREATE OR REPLACE VIEW v_rezerwacje AS
+SELECT r.id, r.id_uzytkownika, r.id_pracownika, r.id_uslugi, r.data_rezerwacji,
+       r.godzina_rozpoczecia, r.godzina_zakonczenia, r.data_zakonczenia, r.liczba_dob,
+       r.status, r.komentarz, r.cena, r.created_at,
+       us.nazwa AS usluga, us.typ AS typ_uslugi, us.slug AS slug_uslugi,
+       k.imie AS k_imie, k.nazwisko AS k_nazwisko, k.email AS k_email, k.numer_telefonu AS k_tel,
+       pu.imie AS p_imie, pu.nazwisko AS p_nazwisko
+FROM rezerwacje r
+JOIN uslugi us ON us.id = r.id_uslugi
+JOIN uzytkownicy k ON k.id = r.id_uzytkownika
+JOIN pracownicy pr ON pr.id = r.id_pracownika
+JOIN uzytkownicy pu ON pu.id = pr.id_uzytkownika;
+
+-- Widok raportowy: obciążenie pracowników (do podglądu w phpMyAdmin)
+CREATE OR REPLACE VIEW v_statystyki_pracownikow AS
+SELECT pr.id AS id_pracownika, CONCAT(u.imie, ' ', u.nazwisko) AS pracownik,
+       COUNT(r.id) AS rezerwacje_razem,
+       SUM(r.status = 'oczekujace') AS oczekujace,
+       SUM(r.status IN ('potwierdzone', 'zakonczone')) AS zrealizowane,
+       COALESCE(SUM(CASE WHEN r.status IN ('potwierdzone', 'zakonczone') THEN r.cena END), 0) AS przychod
+FROM pracownicy pr
+JOIN uzytkownicy u ON u.id = pr.id_uzytkownika
+LEFT JOIN rezerwacje r ON r.id_pracownika = pr.id
+GROUP BY pr.id, u.imie, u.nazwisko;
+
+-- Widok raportowy: przychód w podziale na miesiące
+CREATE OR REPLACE VIEW v_przychod_miesieczny AS
+SELECT DATE_FORMAT(data_rezerwacji, '%Y-%m') AS miesiac, COUNT(*) AS rezerwacje, SUM(cena) AS przychod
+FROM rezerwacje
+WHERE status IN ('potwierdzone', 'zakonczone')
+GROUP BY DATE_FORMAT(data_rezerwacji, '%Y-%m');
+
+-- Funkcja i procedura oraz wyzwalacze (wymagają DELIMITER; phpMyAdmin i Workbench to obsługują)
+DELIMITER $$
+
+-- Funkcja: cena wynajmu = cena usługi * liczba dób
+CREATE FUNCTION fn_cena_rezerwacji(p_usluga INT, p_doby INT) RETURNS DECIMAL(16,2)
+READS SQL DATA
+BEGIN
+    DECLARE v_cena DECIMAL(16,2);
+    SELECT cena INTO v_cena FROM uslugi WHERE id = p_usluga;
+    RETURN COALESCE(v_cena, 0) * GREATEST(COALESCE(p_doby, 1), 1);
+END$$
+
+-- Procedura: raport miesięczny (liczba rezerwacji i przychód w miesiącu)
+CREATE PROCEDURE sp_raport_miesieczny(IN p_rok INT, IN p_miesiac INT)
+BEGIN
+    SELECT us.nazwa AS usluga, COUNT(*) AS rezerwacje, SUM(r.cena) AS przychod
+    FROM rezerwacje r
+    JOIN uslugi us ON us.id = r.id_uslugi
+    WHERE YEAR(r.data_rezerwacji) = p_rok AND MONTH(r.data_rezerwacji) = p_miesiac
+      AND r.status IN ('potwierdzone', 'zakonczone')
+    GROUP BY us.id, us.nazwa
+    ORDER BY przychod DESC;
+END$$
+
+-- Wyzwalacz: poprawność nowej rezerwacji
+CREATE TRIGGER trg_rezerwacje_przed_wstawieniem BEFORE INSERT ON rezerwacje
+FOR EACH ROW
+BEGIN
+    IF NEW.data_zakonczenia < NEW.data_rezerwacji THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.';
+    END IF;
+    IF NEW.cena < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cena rezerwacji nie może być ujemna.';
+    END IF;
+END$$
+
+-- Wyzwalacz: status zakończonej lub anulowanej rezerwacji jest ostateczny
+CREATE TRIGGER trg_rezerwacje_przed_zmiana BEFORE UPDATE ON rezerwacje
+FOR EACH ROW
+BEGIN
+    IF OLD.status IN ('zakonczone', 'anulowane') AND NEW.status <> OLD.status THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nie można zmienić statusu zakończonej lub anulowanej rezerwacji.';
+    END IF;
+END$$
+
+-- Wyzwalacz: godziny pracy muszą mieć początek przed końcem
+CREATE TRIGGER trg_godziny_pracy_przed_wstawieniem BEFORE INSERT ON godziny_pracy_pracownikow
+FOR EACH ROW
+BEGIN
+    IF NEW.godzina_rozpoczecia >= NEW.godzina_zakonczenia THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Początek godzin pracy musi być wcześniejszy niż koniec.';
+    END IF;
+END$$
+
+DELIMITER ;
