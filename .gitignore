@@ -1,3 +1,4 @@
 src/config.php
 storage/*.log
 *.sqlite
+tests/work/

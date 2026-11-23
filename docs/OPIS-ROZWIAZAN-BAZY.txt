@@ -1,0 +1,85 @@
+OPIS ROZWIĄZAŃ BAZODANOWYCH I USPRAWNIEŃ W APLIKACJI RentLoudCars
+(wszystkie obiekty bazy są w pliku database/database.sql, w sekcji na końcu)
+
+=====================================================================
+1. WIDOKI
+=====================================================================
+v_oferta
+  Co: aktywne usługi (auta i usługi godzinowe) razem z nazwą kategorii.
+  Gdzie: funkcja oferta_uslug() w src/rezerwacje.php, czyli strona oferta.php
+  (z filtrami) oraz formularz rezerwacji rezerwacja.php.
+  Po co: jedno miejsce z regułą „co jest w ofercie" (aktywne = 1) i gotowe złączenie z kategorią.
+
+v_rezerwacje
+  Co: rezerwacja połączona z usługą, klientem i pracownikiem (imiona, e-mail, telefon, cena).
+  Gdzie: funkcja rezerwacja_po_id() w src/rezerwacje.php, używana przy mailach
+  z potwierdzeniem i zmianą statusu oraz przy szczegółach rezerwacji.
+  Po co: uproszczenie kodu PHP (jedno zapytanie zamiast złączenia czterech tabel).
+
+v_statystyki_pracownikow
+  Co: dla każdego pracownika liczba rezerwacji, oczekujące, zrealizowane i przychód.
+  Gdzie: widok raportowy do podglądu w phpMyAdmin: SELECT * FROM v_statystyki_pracownikow;
+
+v_przychod_miesieczny
+  Co: przychód i liczba rezerwacji w podziale na miesiące (tylko potwierdzone i zakończone).
+  Gdzie: widok raportowy: SELECT * FROM v_przychod_miesieczny;
+
+=====================================================================
+2. WYZWALACZE (TRIGGERY)
+=====================================================================
+trg_rezerwacje_przed_wstawieniem (BEFORE INSERT na rezerwacje)
+  Odrzuca rezerwację, której data zakończenia jest wcześniejsza niż data rozpoczęcia
+  oraz taką z ujemną ceną. To druga linia obrony obok walidacji w PHP.
+
+trg_rezerwacje_przed_zmiana (BEFORE UPDATE na rezerwacje)
+  Blokuje zmianę statusu rezerwacji zakończonej lub anulowanej (status końcowy).
+  Chroni też przed ręczną zmianą w bazie z pominięciem aplikacji.
+
+trg_godziny_pracy_przed_wstawieniem (BEFORE INSERT na godziny_pracy_pracownikow)
+  Wymusza, aby godzina rozpoczęcia pracy była wcześniejsza niż zakończenia.
+
+Test ręczny w phpMyAdmin:
+  UPDATE rezerwacje SET status='potwierdzone' WHERE id=1;
+  -> błąd: Nie można zmienić statusu zakończonej lub anulowanej rezerwacji.
+
+=====================================================================
+3. FUNKCJA I PROCEDURA SKŁADOWANA
+=====================================================================
+fn_cena_rezerwacji(id_uslugi, liczba_dob)
+  Zwraca cenę wynajmu = cena usługi * liczba dób.
+  Przykład: SELECT fn_cena_rezerwacji(1, 3);
+
+sp_raport_miesieczny(rok, miesiac)
+  Raport: usługi z liczbą rezerwacji i przychodem w danym miesiącu.
+  Przykład: CALL sp_raport_miesieczny(2026, 11);
+
+=====================================================================
+4. TRANSAKCJE
+=====================================================================
+utworz_rezerwacje() w src/rezerwacje.php
+  START TRANSACTION, blokada wierszy pracownika i usługi (SELECT ... FOR UPDATE),
+  sprawdzenie wszystkich konfliktów, INSERT rezerwacji i INSERT do historia_statusow,
+  COMMIT (przy błędzie ROLLBACK). Dzięki temu dwie osoby jednocześnie nie zarezerwują
+  tego samego auta ani terminu pracownika (sprawdzone testem 8 równoległych żądań).
+
+zmien_status() w src/rezerwacje.php
+  Transakcja: odczyt statusu, sprawdzenie dozwolonego przejścia, UPDATE ... WHERE status = stary,
+  wpis do historii statusów.
+
+Panel administratora (admin-pracownicy.php): dodanie pracownika tworzy konto użytkownika i rekord
+pracownika w jednej transakcji.
+
+=====================================================================
+5. INNE ROZWIĄZANIA USPRAWNIAJĄCE DZIAŁANIE
+=====================================================================
+* Klucze obce z ON DELETE RESTRICT (usługa lub pracownik z rezerwacjami nie może zostać usunięty),
+  CASCADE przy usuwaniu konta (tokeny, godziny pracy) i SET NULL w logach.
+* Indeksy: idx_rezerwacje_data, idx_rezerwacje_pracownik_dzien (szybkie sprawdzanie zajętości).
+* Historia statusów (tabela historia_statusow) i dziennik działań admina (log_admina).
+* Cena zapisana w rezerwacji (zmiana cennika nie zmienia starych rezerwacji).
+* Prepared statements, hash haseł bcrypt, tokeny CSRF, blokada konta po 5 błędnych logowaniach.
+* AJAX (api-sloty.php): wolne godziny pobierane bez przeładowania strony.
+* Filtry oferty: kategoria, rodzaj, data z kalendarza, tylko dostępne.
+* Maile: powitalny po rejestracji, potwierdzenie rezerwacji i zmiany statusu, reset hasła
+  (lokalnie zapis do storage/maile.log, na serwerze funkcja mail()).
+* Eksport rezerwacji do CSV, kalendarz floty, pulpit ze statystykami i wykresami.
